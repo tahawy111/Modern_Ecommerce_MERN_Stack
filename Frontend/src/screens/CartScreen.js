@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Header from "./../components/Header";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../Redux/Actions/cartActions";
+import { addToCart, removefromcart } from "../Redux/Actions/cartActions";
 
 const CartScreen = ({ history, match, location }) => {
   window.scrollTo(0, 0);
@@ -15,16 +15,18 @@ const CartScreen = ({ history, match, location }) => {
 
   const total = cartItems.reduce((a, i) => a + i.qty * i.price, 0).toFixed(2);
 
-  const checkOutHandler = (e) => {
-    history.push("/login?redirect=shipping");
-  };
-  const removeFromCartHandler = () => {};
   useEffect(() => {
     if (productId) {
       dispatch(addToCart(productId, qty));
     }
   }, [dispatch, productId, qty]);
 
+  const checkOutHandler = (e) => {
+    history.push("/login?redirect=shipping");
+  };
+  const removeFromCartHandle = (id) => {
+    dispatch(removefromcart(id));
+  };
   return (
     <>
       <Header />
@@ -55,7 +57,7 @@ const CartScreen = ({ history, match, location }) => {
             {cartItems.map((item) => (
               <div className="cart-iterm row">
                 <div
-                  onClick={removeFromCartHandler}
+                  onClick={() => removeFromCartHandle(item.product)}
                   className="remove-button d-flex justify-content-center align-items-center"
                 >
                   <i className="fas fa-times"></i>
